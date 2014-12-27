@@ -1,7 +1,7 @@
 # mdns-repeater
 
 This is a fork of the [mdns-repeater][upstream] project, with some 
-changes to run on [FreeBSD][freebsd] and [pfSense][pfsense]..
+changes to run on [FreeBSD][freebsd] and [pfSense][pfsense].
 
 ## Changes
 Included are minor changes and this patch from a contributor to the original author:
@@ -17,29 +17,29 @@ FreeBSD)..
 
 1) make storage writable
 ```
-pfsense$ /etc/rc.conf_mount_rw
+/etc/rc.conf_mount_rw
 ```
 
 2) copy binary to pfsense
 ```
-freebsd$ scp mdns-repeater root@pfsense:/conf/
+scp mdns-repeater root@pfsense:/conf/
 ```
 
 3) create startup script so that this will start upon restart of pfsense
 ```
-pfsense$ cat << EOF > /conf/mdns-repeater.sh
+cat << EOF > /conf/mdns-repeater.sh
 #!/bin/sh
 ## repeat across LAN and OPT1(wifi)
 /usr/local/bin/mdns-repeater vr0 vr2
 EOF
-pfsense$ chmod 755 /conf/mdns-repeater.sh
-pfsense$ cd /usr/local/etc/rc.d 
-pfsense$ ln -s /conf/mdns-repeater.sh
+chmod 755 /conf/mdns-repeater.sh
+cd /usr/local/etc/rc.d 
+ln -s /conf/mdns-repeater.sh
 ```
 
 4) make storage read only again
 ```
-pfsense$ /etc/rc.conf_mount_ro
+/etc/rc.conf_mount_ro
 ```
 
 Note: the symlink may get lost on updates to pfsense, but the binary and 
