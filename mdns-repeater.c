@@ -186,6 +186,11 @@ static int create_send_sock(int recv_sockfd, const char *ifname, struct if_sock 
 		return r;
 	}
 
+	if ((r = setsockopt(sd, IPPROTO_IP, IP_MULTICAST_IF, if_addr, sizeof(struct in_addr))) < 0) {
+		log_message(LOG_ERR, "send setsockopt(IP_MULTICAST_IF): %m");
+		return r;
+	}
+
 	char *addr_str = strdup(inet_ntoa(sockdata->addr));
 	char *mask_str = strdup(inet_ntoa(sockdata->mask));
 	char *net_str  = strdup(inet_ntoa(sockdata->net));
@@ -426,7 +431,7 @@ int main(int argc, char *argv[]) {
 				continue;
 
 			if (foreground)
-				printf("data from=%s size=%ld\n", inet_ntoa(fromaddr.sin_addr), recvsize);
+				printf("data from=%s size=%d\n", inet_ntoa(fromaddr.sin_addr), recvsize);
 
 			for (j = 0; j < num_socks; j++) {
 				// do not repeat packet back to the same network from which it originated
